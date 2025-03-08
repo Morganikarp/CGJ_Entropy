@@ -15,6 +15,11 @@ public class ProjectileController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += DirVect * 0.005f * GameController.CurrentGameSpeed;
+        transform.position += DirVect * 0.008f * GameController.CurrentGameSpeed;
+    }
+
+    void OnBecameInvisible()
+    {
+        Destroy(gameObject);
     }
 }
