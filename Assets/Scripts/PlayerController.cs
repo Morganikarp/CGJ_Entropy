@@ -47,6 +47,8 @@ public class PlayerController : MonoBehaviour
 
         BulletTimeRegenDelay = false;
         BulletTimeRegenDelayTimer = BulletTimeRegenDelayDuration;
+
+        GameController.PlayerAlive = true;
     }
 
     // Update is called once per frame
@@ -54,8 +56,17 @@ public class PlayerController : MonoBehaviour
     {
         DeathCounter.text = GameController.DeathCount.ToString();
 
-        Move();
-        BulletTime();
+        if (GameController.PlayerAlive)
+        {
+            Move();
+            BulletTime();
+        }
+
+        else
+        {
+            transform.position = new Vector3(0, -1, 0);
+            GameController.PlayerAlive = true;
+        }
     }
 
     void FixedUpdate()
@@ -135,7 +146,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("dead!");
             GameController.DeathCount++;
-            transform.position = new Vector3(0, -1, 0);
+            GameController.PlayerAlive = false;
         }
     }
 }

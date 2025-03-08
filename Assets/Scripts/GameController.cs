@@ -9,4 +9,11 @@ public class GameController : MonoBehaviour
 
     public static int CurrentLevel = 0;
     public static int DeathCount = 0;
+
+    public static bool PlayerAlive = true;
+
+    public static List<GameObject> ActiveProjectiles = new List<GameObject>();
+
+    public static Vector3 bounceInsideBoxCorner = new(6.5f, 3f, 0);
+
 }

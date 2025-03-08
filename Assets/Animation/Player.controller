@@ -309,7 +309,7 @@ AnimatorStateMachine:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Layer
+  m_Name: WalkCycle
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 5376694484817822710}
@@ -382,7 +382,7 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
-    m_Name: New Layer
+    m_Name: WalkCycle
     m_StateMachine: {fileID: -3075756490786626130}
     m_Mask: {fileID: 0}
     m_Motions: []

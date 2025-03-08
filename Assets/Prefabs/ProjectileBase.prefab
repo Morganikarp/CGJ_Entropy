@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5733156092416841985}
   - component: {fileID: 4835091093540416914}
   m_Layer: 0
-  m_Name: Buzzsaw
+  m_Name: ProjectileBase
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,7 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3277faf2a629f64a969c6bd51e4b519, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProjType: 
+  SpeedMod: 0
   DirVect: {x: 0, y: 0, z: 0}
+  ScaleMod: 0
 --- !u!58 &4835091093540416914
 CircleCollider2D:
   m_ObjectHideFlags: 0
