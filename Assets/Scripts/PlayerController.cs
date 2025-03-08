@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    Animator ani;
+    float playerSize;
+
     Rigidbody2D rb;
 
     public TextMeshProUGUI DeathCounter;
@@ -29,6 +32,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ani = GetComponent<Animator>();
+        playerSize = transform.localScale.x;
+
         rb = GetComponent<Rigidbody2D>();
 
         DeathCounter.text = GameController.DeathCount.ToString();
@@ -69,6 +75,12 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = ControlVect * speedMod * GameController.CurrentGameSpeed;
         }
+
+        if (ControlVect.x != 0) { transform.localScale = new Vector3(ControlVect.x * playerSize, playerSize, 1f); }
+
+        ani.SetInteger("ControlVectX", (int)ControlVect.x);
+        ani.SetInteger("ControlVectY", (int)ControlVect.y);
+        ani.speed = GameController.CurrentGameSpeed;
     }
 
     void BulletTime()
