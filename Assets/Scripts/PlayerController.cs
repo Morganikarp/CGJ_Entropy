@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -49,6 +50,8 @@ public class PlayerController : MonoBehaviour
         BulletTimeRegenDelayTimer = BulletTimeRegenDelayDuration;
 
         GameController.PlayerAlive = true;
+
+        GameController.CurrentGameSpeed = GameController.BaseGameSpeed;
     }
 
     // Update is called once per frame
@@ -62,11 +65,11 @@ public class PlayerController : MonoBehaviour
             BulletTime();
         }
 
-        else
-        {
-            transform.position = new Vector3(0, -1, 0);
-            GameController.PlayerAlive = true;
-        }
+        //else
+        //{
+        //    transform.position = new Vector3(0, -1, 0);
+        //    GameController.PlayerAlive = true;
+        //}
     }
 
     void FixedUpdate()
@@ -144,9 +147,17 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.tag == "Projectile")
         {
-            Debug.Log("dead!");
             GameController.DeathCount++;
             GameController.PlayerAlive = false;
+            GameController.CurrentGameSpeed = 0;
+            StartCoroutine(DeathTransition());
         }
+    }
+
+    IEnumerator DeathTransition()
+    {
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
     }
 }

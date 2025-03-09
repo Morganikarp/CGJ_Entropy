@@ -1,30 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
+    Rigidbody2D rb;
 
     public string ProjType;
 
     public float SpeedMod;
-    public Vector3 DirVect;
+    public UnityEngine.Vector3 DirVect;
     public float ScaleMod;
 
-    float baseSpeed = 0.008f;
-
     bool bounceBuffer;
-    int bounceCounter;
+    public int bounceCounter;
+
+    float rotateRate = 0.0015f;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody2D>();
+
         transform.localScale *= ScaleMod;
 
         bounceCounter = 3;
         bounceBuffer = true;
-        StartCoroutine(bounceStartBuffer());
     }
 
     // Update is called once per frame
@@ -33,20 +36,39 @@ public class ProjectileController : MonoBehaviour
         switch (ProjType)
         {
             case "Basic":
-                transform.position += DirVect * baseSpeed * SpeedMod * GameController.CurrentGameSpeed;
+                rb.velocity = DirVect * SpeedMod * GameController.CurrentGameSpeed;
                 break;
             case "Bouncy":
-                transform.position += DirVect * baseSpeed * SpeedMod * GameController.CurrentGameSpeed;
+                rb.velocity = DirVect * SpeedMod * GameController.CurrentGameSpeed;
+
+                if (-GameController.bounceInsideBoxCorner.x < transform.position.x && transform.position.x < GameController.bounceInsideBoxCorner.x &&
+                    -GameController.bounceInsideBoxCorner.y < transform.position.y && transform.position.y < GameController.bounceInsideBoxCorner.y &&
+                    bounceBuffer) { bounceBuffer = false; }
 
                 if (bounceCounter > 0 && !bounceBuffer)
                 {
                     GetComponent<SpriteRenderer>().sortingOrder = 3;
 
-                    if (transform.position.x - ScaleMod >= GameController.bounceInsideBoxCorner.x) { transform.position = new(GameController.bounceInsideBoxCorner.x + ScaleMod, transform.position.y, 0); DirVect = new(-DirVect.x, DirVect.y, 0); bounceCounter--; }
-                    if (transform.position.x + ScaleMod <= -GameController.bounceInsideBoxCorner.x) { transform.position = new(-GameController.bounceInsideBoxCorner.x - ScaleMod, transform.position.y, 0); DirVect = new(-DirVect.x, DirVect.y, 0); bounceCounter--; }
+                    if (transform.position.x > GameController.bounceInsideBoxCorner.x) {
+                        transform.position = new(GameController.bounceInsideBoxCorner.x, transform.position.y, 0); 
+                        DirVect = new(-DirVect.x, DirVect.y, 0); 
+                        bounceCounter--;
+                    }
+                    if (transform.position.x < -GameController.bounceInsideBoxCorner.x) { 
+                        transform.position = new(-GameController.bounceInsideBoxCorner.x, transform.position.y, 0); 
+                        DirVect = new(-DirVect.x, DirVect.y, 0); 
+                        bounceCounter--; 
+                    }
 
-                    if (transform.position.y - ScaleMod >= GameController.bounceInsideBoxCorner.y) { transform.position = new(transform.position.x, GameController.bounceInsideBoxCorner.y + ScaleMod, 0); DirVect = new(DirVect.x, -DirVect.y, 0); bounceCounter--; }
-                    if (transform.position.y + ScaleMod <= -GameController.bounceInsideBoxCorner.y) { transform.position = new(transform.position.x, -GameController.bounceInsideBoxCorner.y - ScaleMod, 0); DirVect = new(DirVect.x, -DirVect.y, 0); bounceCounter--; }
+                    if (transform.position.y > GameController.bounceInsideBoxCorner.y) { 
+                        transform.position = new(transform.position.x, GameController.bounceInsideBoxCorner.y, 0);
+                        DirVect = new(DirVect.x, -DirVect.y, 0); 
+                        bounceCounter--; 
+                    }
+                    if (transform.position.y < -GameController.bounceInsideBoxCorner.y) { 
+                        transform.position = new(transform.position.x, -GameController.bounceInsideBoxCorner.y, 0);
+                        DirVect = new(DirVect.x, -DirVect.y, 0); 
+                        bounceCounter--; }
                 }
 
                 if (bounceCounter <= 0)
@@ -55,18 +77,25 @@ public class ProjectileController : MonoBehaviour
                 }
 
                 break;
+            case "Tracking":
+                rb.velocity = DirVect * SpeedMod * GameController.CurrentGameSpeed;
+                break;
+            case "Bends":
+                rb.velocity = DirVect * SpeedMod * GameController.CurrentGameSpeed;
+                DirVect = new(DirVect.x * Mathf.Cos(rotateRate) - DirVect.y * Mathf.Sin(rotateRate), DirVect.x * Mathf.Sin(rotateRate) + DirVect.y * Mathf.Cos(rotateRate), 0);
+                break;
+            case "Burst":
+                rb.velocity = DirVect * SpeedMod * GameController.CurrentGameSpeed;
+                break;
+            case "Laser":
+                rb.velocity = DirVect * SpeedMod * GameController.CurrentGameSpeed;
+                break;
         }
-    }
-
-    IEnumerator bounceStartBuffer()
-    {
-        yield return new WaitForSeconds(1f);
-        bounceBuffer = false;
     }
 
     IEnumerator bounceReorderLayerBuffer()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.75f);
         GetComponent<SpriteRenderer>().sortingOrder = 1;
     }
 
