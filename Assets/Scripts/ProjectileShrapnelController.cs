@@ -6,6 +6,11 @@ public class ProjectileShrapnelController : MonoBehaviour
 {
     public Vector3 DirVect;
 
+    void Start()
+    {
+        transform.eulerAngles = new(0, 0, Random.Range(0, 360));        
+    }
+
     // Update is called once per frame
     void Update()
     {

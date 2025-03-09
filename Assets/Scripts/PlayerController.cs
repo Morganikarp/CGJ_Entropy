@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
 
-        DeathCounter.text = GameController.DeathCount.ToString();
+        DeathCounter.text = "Deaths: " + GameController.DeathCount.ToString();
 
         BulletTimeBarTrans = BulletTimeBar.GetComponent<RectTransform>();
         BulletTimeBarImage = BulletTimeBar.GetComponent<RawImage>();
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DeathCounter.text = GameController.DeathCount.ToString();
+        DeathCounter.text = "Deaths: " + GameController.DeathCount.ToString();
 
         if (GameController.PlayerAlive)
         {
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
         BulletTimeBarTrans.localScale = new Vector3(CurrentBarWidth, 1, 1);
 
         float CurrentBarAlpha = Mathf.Lerp(1, 0, BulletTimeTimer);
-        BulletTimeBarImage.color = new Color(1, 1, 1, CurrentBarAlpha);
+        BulletTimeBarImage.color = new Color(0.5918477f, 0.6613663f, 0.7169812f, CurrentBarAlpha);
     }
 
     void Move()
@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!BulletTimePenalty)
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift) && BulletTimeTimer != 0)  // Pressing shift AND bar is not empty
+            if (Input.GetKeyDown(KeyCode.Space) && BulletTimeTimer != 0)  // Pressing shift AND bar is not empty
             {
                 GameController.CurrentGameSpeed = 0.3f;
 
@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviour
                 BulletTimeRegenDelayTimer = BulletTimeRegenDelayDuration;
             }
 
-            if (Input.GetKey(KeyCode.LeftShift)) // Holding shift
+            if (Input.GetKey(KeyCode.Space)) // Holding shift
             {
                 BulletTimeTimer -= Time.deltaTime / BulletTimeDuration;
                 if (BulletTimeTimer <= 0) { BulletTimeTimer = 0; BulletTimePenalty = true; }
@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyUp(KeyCode.LeftShift) || BulletTimeTimer == 0) // releasing shift OR bar is empty
+            if (Input.GetKeyUp(KeyCode.Space) || BulletTimeTimer == 0) // releasing shift OR bar is empty
             {
                 GameController.CurrentGameSpeed = GameController.BaseGameSpeed;
             }
