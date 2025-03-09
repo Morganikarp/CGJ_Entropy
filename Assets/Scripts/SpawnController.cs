@@ -170,6 +170,9 @@ public class SpawnController : MonoBehaviour
                 CreateProjectile("Bends", TM_pos, 5, Vector3.down, 2); // 1
 
                 yield return new WaitForSeconds(0.75f);
+
+                CreateProjectile("Burst", TM_pos, 3, Vector3.down, 2); // 1
+
                 break;
         }
 

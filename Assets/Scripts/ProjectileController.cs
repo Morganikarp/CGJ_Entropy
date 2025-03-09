@@ -1,22 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
     Rigidbody2D rb;
 
+    public GameObject burstShrapnelPrefab;
+
     public string ProjType;
 
     public float SpeedMod;
-    public UnityEngine.Vector3 DirVect;
+    public Vector3 DirVect;
     public float ScaleMod;
 
     bool bounceBuffer;
     public int bounceCounter;
 
     float rotateRate = 0.0015f;
+    float rotateVariance = 0.0002f;
 
 
     // Start is called before the first frame update
@@ -28,6 +30,14 @@ public class ProjectileController : MonoBehaviour
 
         bounceCounter = 3;
         bounceBuffer = true;
+
+        rotateRate = Random.Range(rotateRate - rotateVariance, rotateRate + rotateVariance);
+        if (Random.Range(0, 2) == 0) { rotateRate *= -1; }
+
+        if (ProjType == "Burst")
+        {
+            StartCoroutine(burstCountdown());
+        }
     }
 
     // Update is called once per frame
@@ -97,6 +107,23 @@ public class ProjectileController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.75f);
         GetComponent<SpriteRenderer>().sortingOrder = 1;
+    }
+
+    IEnumerator burstCountdown()
+    {
+        yield return new WaitForSeconds(3f);
+
+        for (int i = 0; i < 16; i++)
+        {
+            GameObject shrapnel = Instantiate(burstShrapnelPrefab);
+            shrapnel.transform.position = transform.position;
+            shrapnel.transform.localScale *= ScaleMod / 8;
+            shrapnel.GetComponent<ProjectileShrapnelController>().DirVect = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
+            GameController.ActiveProjectiles.Add(shrapnel);
+        }
+
+        GameController.ActiveProjectiles.Remove(gameObject);
+        Destroy(gameObject);
     }
 
     void OnBecameInvisible()
